@@ -40,6 +40,7 @@ app.post("/upload_files", upload.single('face_image'), (req, res) => {
   const newfilepath = path.join(path.dirname(filepath), originalname);
 
   if (!req.file.buffer) {
+    console.log(req.file);
     console.error('Invalid input');
     res.status(500).send({ message: 'Failed to resize and save file' });
   } else {
