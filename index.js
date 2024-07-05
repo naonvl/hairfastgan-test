@@ -37,9 +37,9 @@ createServer(app).listen(3000, () => {
 
 app.post("/upload_files", upload.single('face_image'), (req, res) => {
   const originalname = req.file.originalname;
-  const filepath = path.join(path.resolve(), 'uploads/', req.file.filename);
+  const filepath = path.join(path.resolve(), 'uploads/', originalname);
   const newfilepath = path.join(path.resolve(), 'uploads/', originalname);
-  const face_image = `http://47.237.84.27:4000/upload/${req.file.filename}`;
+  const face_image = `http://47.237.84.27:4000/upload/${originalname}`;
   const color_image = req.body.color_image;
   const shape_image = "https://d3ss46vukfdtpo.cloudfront.net/static/media/img_thumbnails_hairstyle1.cf36955e.jpg";
 
