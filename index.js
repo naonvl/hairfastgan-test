@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import cors from 'cors';
 import fs from 'fs';
+import sharp from 'sharp';
 import path from 'path';
 
 dotenv.config();
@@ -31,33 +32,38 @@ createServer(app).listen(3000, () => {
   console.log('Server started on port 3000');
 });
 
+
 app.post("/upload_files", upload.single('face_image'), (req, res) => {
   const originalname = req.file.originalname;
   console.log(originalname);
   const filepath = req.file.path;
   const newfilepath = path.join(path.dirname(filepath), originalname);
-  const face_image = `https://hair.natestudio.my.id/upload_files/${originalname}`;
-  const color_image = req.body.color_image;
-  const shape_image = req.body.shape_image;
 
-  fs.rename(filepath, newfilepath, async (err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send({ message: 'Failed to rename file' });
-    } else {
-      const input = {
-        face_image: face_image,
-        color_image: color_image,
-        shape_image: shape_image
-      };
+  sharp(req.file.buffer)
+    .resize(1024, 1024)
+    .toFormat('jpeg')
+    .toFile(newfilepath, async (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Failed to resize and save file' });
+      } else {
+        const face_image = `https://hair.natestudio.my.id/upload_files/${originalname}`;
+        const color_image = req.body.color_image;
+        const shape_image = req.body.shape_image;
 
-      console.log('Using model: %s', model);
-      console.log('With input: %O', input);
+        const input = {
+          face_image: face_image,
+          color_image: color_image,
+          shape_image: shape_image
+        };
 
-      console.log('Running...');
-      const output = await replicate.run(model, { input });
-      console.log('Done!', output);
-      res.send({ message: 'File uploaded successfully' });
-    }
-  });
+        console.log('Using model: %s', model);
+        console.log('With input: %O', input);
+
+        console.log('Running...');
+        const output = await replicate.run(model, { input });
+        console.log('Done!', output);
+        res.send({ message: 'File uploaded successfully' });
+      }
+    });
 });
