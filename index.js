@@ -26,7 +26,7 @@ app.use(cors({
 app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const upload = multer({ dest: 'uploads/',bufferFiles: true  });
+const upload = multer({ dest: 'uploads/', limits: { fileSize: 1000000 }, bufferFiles: true });
 app.use('/upload_files', express.static(path.join(path.resolve(), 'uploads')));
 createServer(app).listen(3000, () => {
   console.log('Server started on port 3000');
