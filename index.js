@@ -67,7 +67,7 @@ app.post("/upload_files", upload.single('face_image'), (req, res) => {
             console.log('Running...');
             const output = await replicate.run(model, { input });
             console.log('Done!', output);
-            res.send({ message: 'File uploaded successfully' });
+            res.send({ message: 'File uploaded successfully', data: output });
           }
         });
     }
