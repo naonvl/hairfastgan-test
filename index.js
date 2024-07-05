@@ -72,8 +72,9 @@ app.get('/upload_files', (req, res) => {
       res.status(500).send({ message: 'Failed to list files' });
     } else {
       const uploadFiles = files.map((file) => {
+        const filenameWithoutExtension = file.split('.')[0];
         return {
-          filename: file,
+          filename: filenameWithoutExtension,
           url: `http://47.237.84.27:3000/upload/${file}`,
         };
       });
