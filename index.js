@@ -65,3 +65,19 @@ app.post("/upload_files", upload.single('face_image'), (req, res) => {
     }
   });
 });
+app.get('/upload_files', (req, res) => {
+  fs.readdir(path.join(path.resolve(), 'uploads/'), (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send({ message: 'Failed to list files' });
+    } else {
+      const uploadFiles = files.map((file) => {
+        return {
+          filename: file,
+          url: `http://47.237.84.27:3000/upload/${file}`,
+        };
+      });
+      res.send(uploadFiles);
+    }
+  });
+});
