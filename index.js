@@ -25,12 +25,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const upload = multer({ dest: 'uploads/' });
-
-// app.post('/upload-face-image', upload.single('face_image'), async (req, res) => {
-//   const filePath = path.join(__dirname, 'uploads', req.file.originalname);
-//   console.log(filePath);
-//   res.send('output');
-// });
+app.use('/upload_files', express.static(path.join(__dirname, 'uploads')));
 createServer(app).listen(3000, () => {
   console.log('Server started on port 3000');
 });
@@ -62,23 +57,6 @@ app.post("/upload_files", upload.single('face_image'), (req, res) => {
       const output = await replicate.run(model, { input });
       console.log('Done!', output);
       res.send({ message: 'File uploaded successfully' });
-    }
-  });
-});
-app.get('/upload_files', (req, res) => {
-  fs.readdir(path.join(path.resolve(), 'uploads/'), (err, files) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send({ message: 'Failed to list files' });
-    } else {
-      const uploadFiles = files.map((file) => {
-        const filenameWithoutExtension = file.split('.')[0];
-        return {
-          filename: filenameWithoutExtension,
-          url: `http://47.237.84.27:3000/upload/${file}`,
-        };
-      });
-      res.send(uploadFiles);
     }
   });
 });
