@@ -18,7 +18,10 @@ const replicate = new Replicate({
 const model = 'camenduru/hairfastgan:c467265bc832a51093a26edd7d224eef88de0415659a8a2858b4aa20ccf194c1';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const upload = multer({ dest: 'uploads/' });
@@ -28,8 +31,8 @@ const upload = multer({ dest: 'uploads/' });
 //   console.log(filePath);
 //   res.send('output');
 // });
-createServer(app).listen(4000, () => {
-  console.log('Server started on port 4000');
+createServer(app).listen(3000, () => {
+  console.log('Server started on port 3000');
 });
 
 app.post("/upload_files", upload.single('face_image'), (req, res) => {
