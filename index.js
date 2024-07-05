@@ -19,33 +19,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-  const face_image = req.file.path;
-  const color_image = "https://replicate.delivery/pbxt/Kl7S0cEYqgQdTpSnNLnstLsdzInYA6ou1NDCNZQimnmYn0Xj/8.png";
-  const shape_image = "https://replicate.delivery/pbxt/Kl7S0E0Cnrp568SMImXpZJij0jQDB0VdPplQGAuFnjtJg3wQ/1.png";
-
-  const input = {
-    face_image: face_image,
-    color_image: color_image,
-    shape_image: shape_image
-  };
-
-  console.log('Using model: %s', model);
-  console.log('With input: %O', input);
-
-  console.log('Running...');
-  const output = await replicate.run(model, { input });
-  console.log('Done!', output);
-
-  res.send(output);
-});
 app.post('/upload-face-image', async (req, res) => {
   const face_image = req.body.face_image;
-  const color_image = "https://replicate.delivery/pbxt/Kl7S0cEYqgQdTpSnNLnstLsdzInYA6ou1NDCNZQimnmYn0Xj/8.png";
-  const shape_image = "https://replicate.delivery/pbxt/Kl7S0E0Cnrp568SMImXpZJij0jQDB0VdPplQGAuFnjtJg3wQ/1.png";
+  const color_image = face_image;
+  const shape_image = "https://d3ss46vukfdtpo.cloudfront.net/static/media/img_thumbnails_hairstyle1.cf36955e.jpg";
 
+  const filePath = `./uploads/${new Date().getTime()}.jpg`;
+  fs.writeFileSync(filePath, face_image);
+  console.log(`Face image saved at ${filePath}`);
   const input = {
-    face_image: face_image,
+    face_image: filePath,
     color_image: color_image,
     shape_image: shape_image
   };
@@ -58,6 +41,6 @@ app.post('/upload-face-image', async (req, res) => {
   console.log('Done!', output);
   res.send(output);
 });
-createServer(app).listen(3000, () => {
-  console.log('Server started on port 3000');
+createServer(app).listen(4000, () => {
+  console.log('Server started on port 4000');
 });
